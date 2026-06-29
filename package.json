@@ -1,0 +1,24 @@
+{
+  "name": "@wexia/widget",
+  "version": "0.1.0",
+  "description": "Wexia feedback widget — vložitelný na jakýkoliv web",
+  "private": false,
+  "type": "module",
+  "main": "dist/wexia-widget.umd.cjs",
+  "module": "dist/wexia-widget.js",
+  "types": "dist/widget.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && vite build && tsc -p tsconfig.build.json"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "typescript": "~6.0.2",
+    "vite": "^8.1.0"
+  },
+  "dependencies": {
+    "html2canvas": "^1.4.1"
+  }
+}
