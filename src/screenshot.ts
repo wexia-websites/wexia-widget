@@ -12,16 +12,21 @@ async function loadHtml2Canvas() {
 
 export async function captureScreenshot(): Promise<string> {
   const html2canvas = await loadHtml2Canvas()
+  // Zachycujeme aktuálně viditelný viewport. windowWidth/windowHeight musí
+  // odpovídat reálnému oknu, jinak se layout přerenderuje ve špatné velikosti
+  // (100vh sekce, fixed hlavička, cover pozadí) a ořez grabne posunutý výřez.
+  const viewportWidth = document.documentElement.clientWidth
+  const viewportHeight = document.documentElement.clientHeight
   const canvas = await html2canvas(document.body, {
     scale: 2,
     useCORS: true,
     logging: false,
     x: window.scrollX,
     y: window.scrollY,
-    width: window.innerWidth,
-    height: window.innerHeight,
-    windowWidth: document.documentElement.scrollWidth,
-    windowHeight: document.documentElement.scrollHeight,
+    width: viewportWidth,
+    height: viewportHeight,
+    windowWidth: viewportWidth,
+    windowHeight: viewportHeight,
   })
   return canvas.toDataURL('image/png').split(',')[1]
 }

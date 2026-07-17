@@ -324,16 +324,17 @@ async function c() {
 	return (await import("./html2canvas-BkIoAdp_.js").then((t) => /* @__PURE__ */ e(t.default, 1))).default;
 }
 async function l() {
-	return (await (await c())(document.body, {
+	let e = await c(), t = document.documentElement.clientWidth, n = document.documentElement.clientHeight;
+	return (await e(document.body, {
 		scale: 2,
 		useCORS: !0,
 		logging: !1,
 		x: window.scrollX,
 		y: window.scrollY,
-		width: window.innerWidth,
-		height: window.innerHeight,
-		windowWidth: document.documentElement.scrollWidth,
-		windowHeight: document.documentElement.scrollHeight
+		width: t,
+		height: n,
+		windowWidth: t,
+		windowHeight: n
 	})).toDataURL("image/png").split(",")[1];
 }
 async function u(e) {
