@@ -17,6 +17,20 @@ interface HighlightRect {
   height: number
 }
 
+// Zakóduje canvas jako JPEG a hlídá velikost. PNG screenshoty stránek s
+// fotkami snadno přesáhnou ~4,5 MB limit request body na Vercelu (→ "Failed to
+// fetch"). JPEG je pro fotky násobně menší; při přesahu snižujeme kvalitu.
+function encodeUnderLimit(canvas: HTMLCanvasElement): string {
+  const MAX_B64 = 3_500_000 // ~3,5 MB base64, bezpečně pod Vercel limitem
+  const qualities = [0.85, 0.7, 0.55, 0.4]
+  let b64 = ''
+  for (const q of qualities) {
+    b64 = canvas.toDataURL('image/jpeg', q).split(',')[1]
+    if (b64.length <= MAX_B64) return b64
+  }
+  return b64
+}
+
 export async function captureScreenshot(highlight?: HighlightRect): Promise<string> {
   const html2canvas = await loadHtml2Canvas()
 
@@ -55,7 +69,10 @@ export async function captureScreenshot(highlight?: HighlightRect): Promise<stri
   out.width = Math.round(vw * scale)
   out.height = Math.round(vh * scale)
   const ctx = out.getContext('2d')
-  if (!ctx) return full.toDataURL('image/png').split(',')[1]
+  if (!ctx) return encodeUnderLimit(full)
+  // Bílé pozadí — JPEG nemá alfu, průhledné oblasti by jinak byly černé.
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(0, 0, out.width, out.height)
   ctx.drawImage(
     full,
     Math.round(cropX * scale), Math.round(cropY * scale), out.width, out.height,
@@ -79,7 +96,7 @@ export async function captureScreenshot(highlight?: HighlightRect): Promise<stri
     ctx.strokeRect(fx, fy, fw, fh)
   }
 
-  return out.toDataURL('image/png').split(',')[1]
+  return encodeUnderLimit(out)
 }
 
 export async function captureElementWithHighlight(element: HTMLElement): Promise<string> {

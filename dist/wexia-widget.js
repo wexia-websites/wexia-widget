@@ -323,9 +323,19 @@ function s() {
 async function c() {
 	return (await import("./html2canvas-BkIoAdp_.js").then((t) => /* @__PURE__ */ e(t.default, 1))).default;
 }
-async function l(e) {
-	let t = await c(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = document.documentElement.scrollWidth, a = document.documentElement.scrollHeight, o = window.scrollX, s = window.scrollY, l = 16e3, u = Math.max(1, Math.min(2, l / i, l / a)), d = await t(document.body, {
-		scale: u,
+function l(e) {
+	let t = [
+		.85,
+		.7,
+		.55,
+		.4
+	], n = "";
+	for (let r of t) if (n = e.toDataURL("image/jpeg", r).split(",")[1], n.length <= 35e5) return n;
+	return n;
+}
+async function u(e) {
+	let t = await c(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = document.documentElement.scrollWidth, a = document.documentElement.scrollHeight, o = window.scrollX, s = window.scrollY, u = 16e3, d = Math.max(1, Math.min(2, u / i, u / a)), f = await t(document.body, {
+		scale: d,
 		useCORS: !0,
 		logging: !1,
 		windowWidth: n,
@@ -336,19 +346,19 @@ async function l(e) {
 		y: 0,
 		width: i,
 		height: a
-	}), f = Math.min(o, Math.max(0, i - n)), p = Math.min(s, Math.max(0, a - r)), m = document.createElement("canvas");
-	m.width = Math.round(n * u), m.height = Math.round(r * u);
-	let h = m.getContext("2d");
-	if (!h) return d.toDataURL("image/png").split(",")[1];
-	if (h.drawImage(d, Math.round(f * u), Math.round(p * u), m.width, m.height, 0, 0, m.width, m.height), e) {
-		let t = (e.left + o - f - 4) * u, n = (e.top + s - p - 4) * u, r = (e.width + 8) * u, i = (e.height + 8) * u;
-		h.fillStyle = "rgba(192,57,43,0.07)", h.fillRect(t, n, r, i), h.strokeStyle = "#C0392B", h.lineWidth = Math.max(2, 4 * u), h.strokeRect(t, n, r, i);
+	}), p = Math.min(o, Math.max(0, i - n)), m = Math.min(s, Math.max(0, a - r)), h = document.createElement("canvas");
+	h.width = Math.round(n * d), h.height = Math.round(r * d);
+	let g = h.getContext("2d");
+	if (!g) return l(f);
+	if (g.fillStyle = "#ffffff", g.fillRect(0, 0, h.width, h.height), g.drawImage(f, Math.round(p * d), Math.round(m * d), h.width, h.height, 0, 0, h.width, h.height), e) {
+		let t = (e.left + o - p - 4) * d, n = (e.top + s - m - 4) * d, r = (e.width + 8) * d, i = (e.height + 8) * d;
+		g.fillStyle = "rgba(192,57,43,0.07)", g.fillRect(t, n, r, i), g.strokeStyle = "#C0392B", g.lineWidth = Math.max(2, 4 * d), g.strokeRect(t, n, r, i);
 	}
-	return m.toDataURL("image/png").split(",")[1];
+	return l(h);
 }
-async function u(e) {
+async function d(e) {
 	let t = e.getBoundingClientRect();
-	return l({
+	return u({
 		left: t.left,
 		top: t.top,
 		width: t.width,
@@ -357,7 +367,7 @@ async function u(e) {
 }
 //#endregion
 //#region src/widget.ts
-var d = "wexia", f = class {
+var f = "wexia", p = class {
 	constructor(e) {
 		this.screenshotBase64 = null, this.pickCleanup = null, this.initialized = !1, this.config = {
 			position: "bottom-right",
@@ -376,18 +386,18 @@ var d = "wexia", f = class {
 		this.initialized = !0, n(this.config.primaryColor, this.config.position);
 		let e = r(this.config);
 		return e.button.addEventListener("click", () => {
-			e.panel.classList.contains(`${d}-open`) ? e.panel.classList.remove(`${d}-open`) : (this.resetForm(e), e.panel.classList.add(`${d}-open`));
+			e.panel.classList.contains(`${f}-open`) ? e.panel.classList.remove(`${f}-open`) : (this.resetForm(e), e.panel.classList.add(`${f}-open`));
 		}), e.pickRow.addEventListener("click", () => {
-			e.panel.classList.remove(`${d}-open`), this.pickCleanup = i(async (t) => {
-				e.pickRow.classList.add(`${d}-active`), e.pickRow.innerHTML = `<span class="${d}-pick-icon">⏳</span><span>Pořizuji screenshot…</span>`;
+			e.panel.classList.remove(`${f}-open`), this.pickCleanup = i(async (t) => {
+				e.pickRow.classList.add(`${f}-active`), e.pickRow.innerHTML = `<span class="${f}-pick-icon">⏳</span><span>Pořizuji screenshot…</span>`;
 				try {
-					this.screenshotBase64 = await u(t), this.showScreenshotPreview(e), e.pickRow.innerHTML = `<span class="${d}-pick-icon">✅</span><span>Element označen — změnit</span>`;
+					this.screenshotBase64 = await d(t), this.showScreenshotPreview(e), e.pickRow.innerHTML = `<span class="${f}-pick-icon">✅</span><span>Element označen — změnit</span>`;
 				} catch {
-					e.pickRow.innerHTML = `<span class="${d}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.pickRow.classList.remove(`${d}-active`);
+					e.pickRow.innerHTML = `<span class="${f}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.pickRow.classList.remove(`${f}-active`);
 				}
-				e.panel.classList.add(`${d}-open`), this.pickCleanup = null;
+				e.panel.classList.add(`${f}-open`), this.pickCleanup = null;
 			}, () => {
-				e.panel.classList.add(`${d}-open`), this.pickCleanup = null;
+				e.panel.classList.add(`${f}-open`), this.pickCleanup = null;
 			});
 		}), e.submitBtn.addEventListener("click", async () => {
 			let t = e.commentTextarea.value.trim();
@@ -409,7 +419,7 @@ var d = "wexia", f = class {
 			};
 			try {
 				await this.submit(n), this.showSuccess(e), a("✓ Feedback úspěšně odeslán"), setTimeout(() => {
-					e.panel.classList.remove(`${d}-open`);
+					e.panel.classList.remove(`${f}-open`);
 				}, 2500);
 			} catch (t) {
 				let n = t instanceof Error ? t.message : "Chyba při odesílání.";
@@ -439,20 +449,20 @@ var d = "wexia", f = class {
 	}
 	showSuccess(e) {
 		e.panelBody.innerHTML = `
-      <div class="${d}-success">
-        <div class="${d}-success-icon">✓</div>
+      <div class="${f}-success">
+        <div class="${f}-success-icon">✓</div>
         <div>Děkujeme za feedback!</div>
         <div style="font-size:13px;font-weight:400;color:#555;margin-top:4px">Tým Wexia se na to podívá.</div>
       </div>
     `;
 	}
 	resetForm(e) {
-		this.screenshotBase64 = null, s(), e.commentTextarea.value = "", e.screenshotPreview.style.display = "none", e.screenshotPreview.innerHTML = "", e.pickRow.classList.remove(`${d}-active`), e.pickRow.innerHTML = `<span class="${d}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.errorEl.style.display = "none", e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
+		this.screenshotBase64 = null, s(), e.commentTextarea.value = "", e.screenshotPreview.style.display = "none", e.screenshotPreview.innerHTML = "", e.pickRow.classList.remove(`${f}-active`), e.pickRow.innerHTML = `<span class="${f}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.errorEl.style.display = "none", e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
 	}
 	destroy() {
-		this.pickCleanup?.(), s(), document.getElementById(`${d}-btn`)?.remove(), document.getElementById(`${d}-panel`)?.remove(), document.getElementById(`${d}-styles`)?.remove(), this.initialized = !1;
+		this.pickCleanup?.(), s(), document.getElementById(`${f}-btn`)?.remove(), document.getElementById(`${f}-panel`)?.remove(), document.getElementById(`${f}-styles`)?.remove(), this.initialized = !1;
 	}
 };
-window.WexiaWidget = f;
+window.WexiaWidget = p;
 //#endregion
-export { f as WexiaWidget, f as default };
+export { p as WexiaWidget, p as default };
