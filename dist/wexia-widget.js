@@ -324,18 +324,22 @@ async function c() {
 	return (await import("./html2canvas-BkIoAdp_.js").then((t) => /* @__PURE__ */ e(t.default, 1))).default;
 }
 async function l() {
-	let e = await c(), t = document.documentElement.clientWidth, n = document.documentElement.clientHeight;
-	return (await e(document.body, {
-		scale: 2,
+	let e = await c(), t = document.documentElement.clientWidth, n = document.documentElement.clientHeight, r = document.documentElement.scrollWidth, i = document.documentElement.scrollHeight, a = 16e3, o = Math.max(1, Math.min(2, a / r, a / i)), s = await e(document.body, {
+		scale: o,
 		useCORS: !0,
 		logging: !1,
-		x: window.scrollX,
-		y: window.scrollY,
-		width: t,
-		height: n,
 		windowWidth: t,
-		windowHeight: n
-	})).toDataURL("image/png").split(",")[1];
+		windowHeight: n,
+		scrollX: 0,
+		scrollY: 0,
+		x: 0,
+		y: 0,
+		width: r,
+		height: i
+	}), l = Math.min(window.scrollX, Math.max(0, r - t)), u = Math.min(window.scrollY, Math.max(0, i - n)), d = document.createElement("canvas");
+	d.width = Math.round(t * o), d.height = Math.round(n * o);
+	let f = d.getContext("2d");
+	return f ? (f.drawImage(s, Math.round(l * o), Math.round(u * o), d.width, d.height, 0, 0, d.width, d.height), d.toDataURL("image/png").split(",")[1]) : s.toDataURL("image/png").split(",")[1];
 }
 async function u(e) {
 	s();
