@@ -33,6 +33,14 @@ export function injectStyles(primaryColor: string, position: 'bottom-right' | 'b
       transform: scale(1.08);
       box-shadow: 0 6px 20px rgba(0,0,0,0.36);
     }
+    .${PREFIX}-btn-logo {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 800;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
     #${PREFIX}-panel {
       position: fixed;
       bottom: 88px;
@@ -183,6 +191,21 @@ export function injectStyles(primaryColor: string, position: 'bottom-right' | 'b
       font-weight: 600;
     }
     .${PREFIX}-success-icon { font-size: 36px; margin-bottom: 8px; }
+    .${PREFIX}-again-btn {
+      margin-top: 4px;
+      width: 100%;
+      background: #fff;
+      color: ${primaryColor};
+      border: 1.5px solid ${primaryColor};
+      border-radius: 8px;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .${PREFIX}-again-btn:hover { background: #fef2f2; }
     .${PREFIX}-overlay {
       position: fixed;
       inset: 0;
@@ -248,7 +271,7 @@ export function createUI(config: WexiaWidgetConfig): UIElements {
   const button = document.createElement('button')
   button.id = `${PREFIX}-btn`
   button.title = 'Odeslat feedback'
-  button.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`
+  button.innerHTML = `<span class="${PREFIX}-btn-logo">W</span>`
 
   // Panel
   const panel = document.createElement('div')

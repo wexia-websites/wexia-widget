@@ -93,9 +93,6 @@ class WexiaWidget {
         await this.submit(payload)
         this.showSuccess(ui)
         showToast('✓ Feedback úspěšně odeslán')
-        setTimeout(() => {
-          ui.panel.classList.remove(`${PREFIX}-open`)
-        }, 2500)
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Chyba při odesílání.'
         this.showError(ui, msg)
@@ -135,16 +132,39 @@ class WexiaWidget {
   }
 
   private showSuccess(ui: ReturnType<typeof createUI>) {
-    ui.panelBody.innerHTML = `
+    // Formulář schováme (ne zahodíme) — necháme ho pro "Odeslat další feedback".
+    Array.from(ui.panelBody.children).forEach((c) => {
+      ;(c as HTMLElement).style.display = 'none'
+    })
+
+    let success = ui.panelBody.querySelector<HTMLDivElement>(`.${PREFIX}-success-wrap`)
+    if (!success) {
+      success = document.createElement('div')
+      success.className = `${PREFIX}-success-wrap`
+      ui.panelBody.appendChild(success)
+    }
+    success.style.display = 'block'
+    success.innerHTML = `
       <div class="${PREFIX}-success">
         <div class="${PREFIX}-success-icon">✓</div>
         <div>Děkujeme za feedback!</div>
         <div style="font-size:13px;font-weight:400;color:#555;margin-top:4px">Tým Wexia se na to podívá.</div>
       </div>
+      <button type="button" class="${PREFIX}-again-btn">Odeslat další feedback</button>
     `
+    success
+      .querySelector<HTMLButtonElement>(`.${PREFIX}-again-btn`)
+      ?.addEventListener('click', () => this.resetForm(ui))
   }
 
   private resetForm(ui: ReturnType<typeof createUI>) {
+    // Zpět z "děkujeme" na čistý formulář bez reloadu stránky.
+    const success = ui.panelBody.querySelector<HTMLElement>(`.${PREFIX}-success-wrap`)
+    if (success) success.style.display = 'none'
+    Array.from(ui.panelBody.children).forEach((c) => {
+      if (c !== success) (c as HTMLElement).style.display = ''
+    })
+
     this.screenshotBase64 = null
     removeHighlight()
     ui.commentTextarea.value = ''

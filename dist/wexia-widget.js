@@ -29,6 +29,14 @@ function n(e, n) {
       transform: scale(1.08);
       box-shadow: 0 6px 20px rgba(0,0,0,0.36);
     }
+    .${t}-btn-logo {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 800;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
     #${t}-panel {
       position: fixed;
       bottom: 88px;
@@ -179,6 +187,21 @@ function n(e, n) {
       font-weight: 600;
     }
     .${t}-success-icon { font-size: 36px; margin-bottom: 8px; }
+    .${t}-again-btn {
+      margin-top: 4px;
+      width: 100%;
+      background: #fff;
+      color: ${e};
+      border: 1.5px solid ${e};
+      border-radius: 8px;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .${t}-again-btn:hover { background: #fef2f2; }
     .${t}-overlay {
       position: fixed;
       inset: 0;
@@ -226,7 +249,7 @@ function r(e) {
 		"Dotaz",
 		"Jiné"
 	], i = document.createElement("button");
-	i.id = `${t}-btn`, i.title = "Odeslat feedback", i.innerHTML = "<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/></svg>";
+	i.id = `${t}-btn`, i.title = "Odeslat feedback", i.innerHTML = `<span class="${t}-btn-logo">W</span>`;
 	let a = document.createElement("div");
 	a.id = `${t}-panel`;
 	let o = document.createElement("div");
@@ -418,9 +441,7 @@ var f = "wexia", p = class {
 				timestamp: (/* @__PURE__ */ new Date()).toISOString()
 			};
 			try {
-				await this.submit(n), this.showSuccess(e), a("✓ Feedback úspěšně odeslán"), setTimeout(() => {
-					e.panel.classList.remove(`${f}-open`);
-				}, 2500);
+				await this.submit(n), this.showSuccess(e), a("✓ Feedback úspěšně odeslán");
 			} catch (t) {
 				let n = t instanceof Error ? t.message : "Chyba při odesílání.";
 				this.showError(e, n), e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
@@ -448,16 +469,24 @@ var f = "wexia", p = class {
 		e.errorEl.textContent = t, e.errorEl.style.display = "block";
 	}
 	showSuccess(e) {
-		e.panelBody.innerHTML = `
+		Array.from(e.panelBody.children).forEach((e) => {
+			e.style.display = "none";
+		});
+		let t = e.panelBody.querySelector(`.${f}-success-wrap`);
+		t || (t = document.createElement("div"), t.className = `${f}-success-wrap`, e.panelBody.appendChild(t)), t.style.display = "block", t.innerHTML = `
       <div class="${f}-success">
         <div class="${f}-success-icon">✓</div>
         <div>Děkujeme za feedback!</div>
         <div style="font-size:13px;font-weight:400;color:#555;margin-top:4px">Tým Wexia se na to podívá.</div>
       </div>
-    `;
+      <button type="button" class="${f}-again-btn">Odeslat další feedback</button>
+    `, t.querySelector(`.${f}-again-btn`)?.addEventListener("click", () => this.resetForm(e));
 	}
 	resetForm(e) {
-		this.screenshotBase64 = null, s(), e.commentTextarea.value = "", e.screenshotPreview.style.display = "none", e.screenshotPreview.innerHTML = "", e.pickRow.classList.remove(`${f}-active`), e.pickRow.innerHTML = `<span class="${f}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.errorEl.style.display = "none", e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
+		let t = e.panelBody.querySelector(`.${f}-success-wrap`);
+		t && (t.style.display = "none"), Array.from(e.panelBody.children).forEach((e) => {
+			e !== t && (e.style.display = "");
+		}), this.screenshotBase64 = null, s(), e.commentTextarea.value = "", e.screenshotPreview.style.display = "none", e.screenshotPreview.innerHTML = "", e.pickRow.classList.remove(`${f}-active`), e.pickRow.innerHTML = `<span class="${f}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.errorEl.style.display = "none", e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
 	}
 	destroy() {
 		this.pickCleanup?.(), s(), document.getElementById(`${f}-btn`)?.remove(), document.getElementById(`${f}-panel`)?.remove(), document.getElementById(`${f}-styles`)?.remove(), this.initialized = !1;
