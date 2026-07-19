@@ -10,13 +10,22 @@ async function loadHtml2Canvas() {
   return mod.default
 }
 
-export async function captureScreenshot(): Promise<string> {
+interface HighlightRect {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+export async function captureScreenshot(highlight?: HighlightRect): Promise<string> {
   const html2canvas = await loadHtml2Canvas()
 
   const vw = document.documentElement.clientWidth
   const vh = document.documentElement.clientHeight
   const pageW = document.documentElement.scrollWidth
   const pageH = document.documentElement.scrollHeight
+  const sx = window.scrollX
+  const sy = window.scrollY
 
   // html2canvas při přímém viewport-crop (x/y = scroll) ignoruje scroll pozici
   // a zachytí vršek stránky. Proto vyrenderujeme celou stránku ve správné
@@ -39,8 +48,8 @@ export async function captureScreenshot(): Promise<string> {
     height: pageH,
   })
 
-  const cropX = Math.min(window.scrollX, Math.max(0, pageW - vw))
-  const cropY = Math.min(window.scrollY, Math.max(0, pageH - vh))
+  const cropX = Math.min(sx, Math.max(0, pageW - vw))
+  const cropY = Math.min(sy, Math.max(0, pageH - vh))
 
   const out = document.createElement('canvas')
   out.width = Math.round(vw * scale)
@@ -52,35 +61,35 @@ export async function captureScreenshot(): Promise<string> {
     Math.round(cropX * scale), Math.round(cropY * scale), out.width, out.height,
     0, 0, out.width, out.height,
   )
+
+  // Rámeček kolem vybraného elementu domalujeme přímo na výřez. Spoléhat na
+  // html2canvas u position:fixed highlightu je nespolehlivé (umístí ho vůči
+  // vršku full-page renderu, ne vůči reálné pozici prvku). rect je
+  // viewport-relativní → absolutní pozice = rect + scroll, v canvasu = (abs - crop) * scale.
+  if (highlight) {
+    const pad = 4
+    const fx = (highlight.left + sx - cropX - pad) * scale
+    const fy = (highlight.top + sy - cropY - pad) * scale
+    const fw = (highlight.width + pad * 2) * scale
+    const fh = (highlight.height + pad * 2) * scale
+    ctx.fillStyle = 'rgba(192,57,43,0.07)'
+    ctx.fillRect(fx, fy, fw, fh)
+    ctx.strokeStyle = '#C0392B'
+    ctx.lineWidth = Math.max(2, 4 * scale)
+    ctx.strokeRect(fx, fy, fw, fh)
+  }
+
   return out.toDataURL('image/png').split(',')[1]
 }
 
 export async function captureElementWithHighlight(element: HTMLElement): Promise<string> {
-  removeHighlight()
-
   const rect = element.getBoundingClientRect()
-  highlightEl = document.createElement('div')
-  Object.assign(highlightEl.style, {
-    position:    'fixed',
-    left:        `${rect.left - 4}px`,
-    top:         `${rect.top - 4}px`,
-    width:       `${rect.width + 8}px`,
-    height:      `${rect.height + 8}px`,
-    border:      '4px solid #C0392B',
-    borderRadius: '4px',
-    background:  'rgba(192,57,43,0.07)',
-    zIndex:      '2147480000',
-    pointerEvents: 'none',
-    boxSizing:   'border-box',
+  return captureScreenshot({
+    left: rect.left,
+    top: rect.top,
+    width: rect.width,
+    height: rect.height,
   })
-  document.body.appendChild(highlightEl)
-
-  // Wait one frame for highlight to render
-  await new Promise(r => setTimeout(r, 100))
-
-  const base64 = await captureScreenshot()
-  removeHighlight()
-  return base64
 }
 
 export { removeHighlight }

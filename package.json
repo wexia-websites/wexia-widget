@@ -1,13 +1,15 @@
 {
   "name": "@wexia/widget",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Wexia feedback widget — vložitelný na jakýkoliv web",
   "private": false,
   "type": "module",
   "main": "dist/wexia-widget.umd.cjs",
   "module": "dist/wexia-widget.js",
   "types": "dist/widget.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",

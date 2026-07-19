@@ -323,42 +323,37 @@ function s() {
 async function c() {
 	return (await import("./html2canvas-BkIoAdp_.js").then((t) => /* @__PURE__ */ e(t.default, 1))).default;
 }
-async function l() {
-	let e = await c(), t = document.documentElement.clientWidth, n = document.documentElement.clientHeight, r = document.documentElement.scrollWidth, i = document.documentElement.scrollHeight, a = 16e3, o = Math.max(1, Math.min(2, a / r, a / i)), s = await e(document.body, {
-		scale: o,
+async function l(e) {
+	let t = await c(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = document.documentElement.scrollWidth, a = document.documentElement.scrollHeight, o = window.scrollX, s = window.scrollY, l = 16e3, u = Math.max(1, Math.min(2, l / i, l / a)), d = await t(document.body, {
+		scale: u,
 		useCORS: !0,
 		logging: !1,
-		windowWidth: t,
-		windowHeight: n,
+		windowWidth: n,
+		windowHeight: r,
 		scrollX: 0,
 		scrollY: 0,
 		x: 0,
 		y: 0,
-		width: r,
-		height: i
-	}), l = Math.min(window.scrollX, Math.max(0, r - t)), u = Math.min(window.scrollY, Math.max(0, i - n)), d = document.createElement("canvas");
-	d.width = Math.round(t * o), d.height = Math.round(n * o);
-	let f = d.getContext("2d");
-	return f ? (f.drawImage(s, Math.round(l * o), Math.round(u * o), d.width, d.height, 0, 0, d.width, d.height), d.toDataURL("image/png").split(",")[1]) : s.toDataURL("image/png").split(",")[1];
+		width: i,
+		height: a
+	}), f = Math.min(o, Math.max(0, i - n)), p = Math.min(s, Math.max(0, a - r)), m = document.createElement("canvas");
+	m.width = Math.round(n * u), m.height = Math.round(r * u);
+	let h = m.getContext("2d");
+	if (!h) return d.toDataURL("image/png").split(",")[1];
+	if (h.drawImage(d, Math.round(f * u), Math.round(p * u), m.width, m.height, 0, 0, m.width, m.height), e) {
+		let t = (e.left + o - f - 4) * u, n = (e.top + s - p - 4) * u, r = (e.width + 8) * u, i = (e.height + 8) * u;
+		h.fillStyle = "rgba(192,57,43,0.07)", h.fillRect(t, n, r, i), h.strokeStyle = "#C0392B", h.lineWidth = Math.max(2, 4 * u), h.strokeRect(t, n, r, i);
+	}
+	return m.toDataURL("image/png").split(",")[1];
 }
 async function u(e) {
-	s();
 	let t = e.getBoundingClientRect();
-	o = document.createElement("div"), Object.assign(o.style, {
-		position: "fixed",
-		left: `${t.left - 4}px`,
-		top: `${t.top - 4}px`,
-		width: `${t.width + 8}px`,
-		height: `${t.height + 8}px`,
-		border: "4px solid #C0392B",
-		borderRadius: "4px",
-		background: "rgba(192,57,43,0.07)",
-		zIndex: "2147480000",
-		pointerEvents: "none",
-		boxSizing: "border-box"
-	}), document.body.appendChild(o), await new Promise((e) => setTimeout(e, 100));
-	let n = await l();
-	return s(), n;
+	return l({
+		left: t.left,
+		top: t.top,
+		width: t.width,
+		height: t.height
+	});
 }
 //#endregion
 //#region src/widget.ts
