@@ -34,6 +34,37 @@ function encodeUnderLimit(canvas: HTMLCanvasElement): string {
   return b64
 }
 
+// html2canvas nezná dvě věci, které Wexia admin používá a které bez ošetření
+// rozhází horní část screenshotu:
+//   1) nativní <details> collapse — sbalený panel má obsah skrytý přes UA
+//      mechanismus (ne display:none), takže html2canvas ho vykreslí jako
+//      rozbalený a karty se přetisknou přes obsah pod ním (ghost karty).
+//   2) backdrop-filter (blur) — sticky filter bar má poloprůhledné pozadí
+//      (`bg-grey/90`) a spoléhá na blur, aby zakryl obsah za sebou. Blur
+//      html2canvas ignoruje, takže obsah skrz poloprůhledné pozadí prosvítá.
+// Oboje srovnáme v klonu DOMu (onclone) — reálná stránka zůstane nedotčená.
+function neutralizeUnsupportedLayout(doc: Document): void {
+  doc.querySelectorAll('details:not([open])').forEach((details) => {
+    details.querySelectorAll(':scope > *:not(summary)').forEach((child) => {
+      ;(child as HTMLElement).style.display = 'none'
+    })
+  })
+
+  const view = doc.defaultView
+  if (!view) return
+  doc.querySelectorAll<HTMLElement>('*').forEach((el) => {
+    const cs = view.getComputedStyle(el)
+    const bf = cs.backdropFilter || (cs as unknown as { webkitBackdropFilter?: string }).webkitBackdropFilter
+    if (!bf || bf === 'none') return
+    const m = cs.backgroundColor.match(/rgba?\(([^)]+)\)/)
+    if (!m) return
+    const parts = m[1].split(',').map((s) => s.trim())
+    if (parts.length === 4 && Number(parts[3]) < 1) {
+      el.style.backgroundColor = `rgb(${parts[0]}, ${parts[1]}, ${parts[2]})`
+    }
+  })
+}
+
 export async function captureScreenshot(highlight?: HighlightRect): Promise<string> {
   const html2canvas = await loadHtml2Canvas()
 
@@ -62,6 +93,7 @@ export async function captureScreenshot(highlight?: HighlightRect): Promise<stri
     height: vh,
     windowWidth: vw,
     windowHeight: vh,
+    onclone: neutralizeUnsupportedLayout,
   })
 
   // Highlight kreslíme na VLASTNÍ canvas (kopie přes drawImage), ne na ten

@@ -1,6 +1,6 @@
 {
   "name": "@wexia/widget",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Wexia feedback widget — vložitelný na jakýkoliv web",
   "private": false,
   "type": "module",
