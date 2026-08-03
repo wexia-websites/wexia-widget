@@ -5,8 +5,11 @@ function removeHighlight() {
   highlightEl = null
 }
 
+// html2canvas-pro (fork) místo originálu: podporuje moderní CSS barvy
+// `color-mix()`, `oklch()`, `lab()`, `color()`. Originál html2canvas 1.4.1 na
+// nich hází chybu a screenshot spadne — Tailwind v4 (Wexia admin) je používá.
 async function loadHtml2Canvas() {
-  const mod = await import('html2canvas')
+  const mod = await import('html2canvas-pro')
   return mod.default
 }
 

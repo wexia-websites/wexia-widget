@@ -1,18 +1,17 @@
-import { n as e } from "./rolldown-runtime-3b4jIN3o.js";
 //#region src/ui.ts
-var t = "wexia";
-function n(e, n) {
-	let r = document.getElementById(`${t}-styles`);
+var e = "wexia";
+function t(t, n) {
+	let r = document.getElementById(`${e}-styles`);
 	r && r.remove();
 	let i = n === "bottom-left" ? "left: 24px;" : "right: 24px;", a = `
-    #${t}-btn {
+    #${e}-btn {
       position: fixed;
       bottom: 24px;
       ${i}
       width: 52px;
       height: 52px;
       border-radius: 50%;
-      background: ${e};
+      background: ${t};
       border: none;
       cursor: pointer;
       box-shadow: 0 4px 16px rgba(0,0,0,0.28);
@@ -25,11 +24,11 @@ function n(e, n) {
       font-size: 22px;
       line-height: 1;
     }
-    #${t}-btn:hover {
+    #${e}-btn:hover {
       transform: scale(1.08);
       box-shadow: 0 6px 20px rgba(0,0,0,0.36);
     }
-    .${t}-btn-logo {
+    .${e}-btn-logo {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-weight: 800;
       font-size: 24px;
@@ -37,7 +36,7 @@ function n(e, n) {
       letter-spacing: -0.5px;
       color: #fff;
     }
-    #${t}-panel {
+    #${e}-panel {
       position: fixed;
       bottom: 88px;
       ${i}
@@ -53,11 +52,11 @@ function n(e, n) {
       flex-direction: column;
       overflow: hidden;
     }
-    #${t}-panel.${t}-open {
+    #${e}-panel.${e}-open {
       display: flex;
     }
-    .${t}-panel-header {
-      background: ${e};
+    .${e}-panel-header {
+      background: ${t};
       color: #fff;
       padding: 14px 16px;
       font-weight: 600;
@@ -66,7 +65,7 @@ function n(e, n) {
       align-items: center;
       justify-content: space-between;
     }
-    .${t}-close-btn {
+    .${e}-close-btn {
       background: none;
       border: none;
       color: #fff;
@@ -77,14 +76,14 @@ function n(e, n) {
       opacity: 0.8;
       transition: opacity 0.1s;
     }
-    .${t}-close-btn:hover { opacity: 1; }
-    .${t}-panel-body {
+    .${e}-close-btn:hover { opacity: 1; }
+    .${e}-panel-body {
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-    .${t}-label {
+    .${e}-label {
       display: block;
       font-size: 12px;
       font-weight: 600;
@@ -93,9 +92,9 @@ function n(e, n) {
       text-transform: uppercase;
       letter-spacing: 0.4px;
     }
-    .${t}-select,
-    .${t}-textarea,
-    .${t}-input {
+    .${e}-select,
+    .${e}-textarea,
+    .${e}-input {
       width: 100%;
       box-sizing: border-box;
       border: 1.5px solid #e0e0e0;
@@ -108,17 +107,17 @@ function n(e, n) {
       transition: border-color 0.15s;
       outline: none;
     }
-    .${t}-select:focus,
-    .${t}-textarea:focus,
-    .${t}-input:focus {
-      border-color: ${e};
+    .${e}-select:focus,
+    .${e}-textarea:focus,
+    .${e}-input:focus {
+      border-color: ${t};
       background: #fff;
     }
-    .${t}-textarea {
+    .${e}-textarea {
       resize: vertical;
       min-height: 80px;
     }
-    .${t}-pick-row {
+    .${e}-pick-row {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -130,18 +129,18 @@ function n(e, n) {
       transition: border-color 0.15s, background 0.15s;
       user-select: none;
     }
-    .${t}-pick-row:hover {
-      border-color: ${e};
+    .${e}-pick-row:hover {
+      border-color: ${t};
       background: #fef2f2;
     }
-    .${t}-pick-row.${t}-active {
-      border-color: ${e};
+    .${e}-pick-row.${e}-active {
+      border-color: ${t};
       background: #fef2f2;
-      color: ${e};
+      color: ${t};
       font-weight: 600;
     }
-    .${t}-pick-icon { font-size: 16px; }
-    .${t}-screenshot-preview {
+    .${e}-pick-icon { font-size: 16px; }
+    .${e}-screenshot-preview {
       border-radius: 6px;
       overflow: hidden;
       border: 1px solid #e0e0e0;
@@ -151,14 +150,14 @@ function n(e, n) {
       justify-content: center;
       background: #f0f0f0;
     }
-    .${t}-screenshot-preview img {
+    .${e}-screenshot-preview img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-    .${t}-submit-btn {
-      background: ${e};
+    .${e}-submit-btn {
+      background: ${t};
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -170,29 +169,29 @@ function n(e, n) {
       transition: opacity 0.15s;
       font-family: inherit;
     }
-    .${t}-submit-btn:hover:not(:disabled) { opacity: 0.88; }
-    .${t}-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .${t}-error {
+    .${e}-submit-btn:hover:not(:disabled) { opacity: 0.88; }
+    .${e}-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .${e}-error {
       color: #c0392b;
       font-size: 12px;
       background: #fef2f2;
       border-radius: 6px;
       padding: 6px 10px;
     }
-    .${t}-success {
+    .${e}-success {
       text-align: center;
       padding: 24px 16px;
       color: #16a34a;
       font-size: 15px;
       font-weight: 600;
     }
-    .${t}-success-icon { font-size: 36px; margin-bottom: 8px; }
-    .${t}-again-btn {
+    .${e}-success-icon { font-size: 36px; margin-bottom: 8px; }
+    .${e}-again-btn {
       margin-top: 4px;
       width: 100%;
       background: #fff;
-      color: ${e};
-      border: 1.5px solid ${e};
+      color: ${t};
+      border: 1.5px solid ${t};
       border-radius: 8px;
       padding: 9px 16px;
       font-size: 13px;
@@ -201,14 +200,14 @@ function n(e, n) {
       font-family: inherit;
       transition: background 0.15s;
     }
-    .${t}-again-btn:hover { background: #fef2f2; }
-    .${t}-overlay {
+    .${e}-again-btn:hover { background: #fef2f2; }
+    .${e}-overlay {
       position: fixed;
       inset: 0;
       z-index: 2147483602;
       cursor: crosshair;
     }
-    .${t}-overlay-hint {
+    .${e}-overlay-hint {
       position: fixed;
       top: 16px;
       left: 50%;
@@ -223,7 +222,7 @@ function n(e, n) {
       pointer-events: none;
       white-space: nowrap;
     }
-    .${t}-toast {
+    .${e}-toast {
       position: fixed;
       top: 24px;
       left: 50%;
@@ -240,48 +239,48 @@ function n(e, n) {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
   `, o = document.createElement("style");
-	o.id = `${t}-styles`, o.textContent = a, document.head.appendChild(o);
+	o.id = `${e}-styles`, o.textContent = a, document.head.appendChild(o);
 }
-function r(e) {
-	let n = e.primaryColor ?? "#C0392B", r = e.categories ?? [
+function n(t) {
+	let n = t.primaryColor ?? "#C0392B", r = t.categories ?? [
 		"Bug",
 		"Nápad",
 		"Dotaz",
 		"Jiné"
 	], i = document.createElement("button");
-	i.id = `${t}-btn`, i.title = "Odeslat feedback", i.innerHTML = `<span class="${t}-btn-logo">W</span>`;
+	i.id = `${e}-btn`, i.title = "Odeslat feedback", i.innerHTML = `<span class="${e}-btn-logo">W</span>`;
 	let a = document.createElement("div");
-	a.id = `${t}-panel`;
+	a.id = `${e}-panel`;
 	let o = document.createElement("div");
-	o.className = `${t}-panel-header`, o.innerHTML = "<span>Odeslat feedback</span>";
+	o.className = `${e}-panel-header`, o.innerHTML = "<span>Odeslat feedback</span>";
 	let s = document.createElement("button");
-	s.className = `${t}-close-btn`, s.innerHTML = "✕", s.title = "Zavřít", o.appendChild(s);
+	s.className = `${e}-close-btn`, s.innerHTML = "✕", s.title = "Zavřít", o.appendChild(s);
 	let c = document.createElement("div");
-	c.className = `${t}-panel-body`;
+	c.className = `${e}-panel-body`;
 	let l = document.createElement("div"), u = document.createElement("label");
-	u.className = `${t}-label`, u.textContent = "Kategorie";
+	u.className = `${e}-label`, u.textContent = "Kategorie";
 	let d = document.createElement("select");
-	d.className = `${t}-select`, r.forEach((e) => {
+	d.className = `${e}-select`, r.forEach((e) => {
 		let t = document.createElement("option");
 		t.value = e.toLowerCase(), t.textContent = e, d.appendChild(t);
 	}), l.appendChild(u), l.appendChild(d);
 	let f = document.createElement("div"), p = document.createElement("label");
-	p.className = `${t}-label`, p.textContent = "Komentář";
+	p.className = `${e}-label`, p.textContent = "Komentář";
 	let m = document.createElement("textarea");
-	m.className = `${t}-textarea`, m.placeholder = "Co se stalo? Popiš prosím podrobněji...", f.appendChild(p), f.appendChild(m);
+	m.className = `${e}-textarea`, m.placeholder = "Co se stalo? Popiš prosím podrobněji...", f.appendChild(p), f.appendChild(m);
 	let h = document.createElement("div");
-	h.className = `${t}-pick-row`, h.innerHTML = `<span class="${t}-pick-icon">🎯</span><span>Označit element na stránce</span>`;
+	h.className = `${e}-pick-row`, h.innerHTML = `<span class="${e}-pick-icon">🎯</span><span>Označit element na stránce</span>`;
 	let g = document.createElement("div");
-	g.className = `${t}-screenshot-preview`, g.style.display = "none";
+	g.className = `${e}-screenshot-preview`, g.style.display = "none";
 	let _ = document.createElement("div"), v = document.createElement("label");
-	v.className = `${t}-label`, v.textContent = "Váš e-mail (volitelné)";
+	v.className = `${e}-label`, v.textContent = "Váš e-mail (volitelné)";
 	let y = document.createElement("input");
-	y.type = "email", y.className = `${t}-input`, y.placeholder = "vas@email.cz", y.value = e.userEmail ?? "", _.appendChild(v), _.appendChild(y);
+	y.type = "email", y.className = `${e}-input`, y.placeholder = "vas@email.cz", y.value = t.userEmail ?? "", _.appendChild(v), _.appendChild(y);
 	let b = document.createElement("div");
-	b.className = `${t}-error`, b.style.display = "none";
+	b.className = `${e}-error`, b.style.display = "none";
 	let x = document.createElement("button");
-	return x.className = `${t}-submit-btn`, x.textContent = "Odeslat feedback", x.style.setProperty("--primary", n), c.appendChild(l), c.appendChild(f), c.appendChild(h), c.appendChild(g), c.appendChild(_), c.appendChild(b), c.appendChild(x), a.appendChild(o), a.appendChild(c), document.body.appendChild(i), document.body.appendChild(a), s.addEventListener("click", () => {
-		a.classList.remove(`${t}-open`);
+	return x.className = `${e}-submit-btn`, x.textContent = "Odeslat feedback", x.style.setProperty("--primary", n), c.appendChild(l), c.appendChild(f), c.appendChild(h), c.appendChild(g), c.appendChild(_), c.appendChild(b), c.appendChild(x), a.appendChild(o), a.appendChild(c), document.body.appendChild(i), document.body.appendChild(a), s.addEventListener("click", () => {
+		a.classList.remove(`${e}-open`);
 	}), {
 		button: i,
 		panel: a,
@@ -295,11 +294,11 @@ function r(e) {
 		panelBody: c
 	};
 }
-function i(e, n) {
+function r(t, n) {
 	let r = document.createElement("div");
-	r.className = `${t}-overlay`;
+	r.className = `${e}-overlay`;
 	let i = document.createElement("div");
-	i.className = `${t}-overlay-hint`, i.textContent = "Klikni na prvek který chceš označit · Esc = zrušit", document.body.appendChild(r), document.body.appendChild(i);
+	i.className = `${e}-overlay-hint`, i.textContent = "Klikni na prvek který chceš označit · Esc = zrušit", document.body.appendChild(r), document.body.appendChild(i);
 	let a = null, o = null;
 	function s(e) {
 		r.style.pointerEvents = "none";
@@ -319,10 +318,10 @@ function i(e, n) {
 			boxSizing: "border-box"
 		}), document.body.appendChild(o);
 	}
-	function c(t) {
-		t.preventDefault(), t.stopPropagation(), r.style.pointerEvents = "none";
-		let i = document.elementFromPoint(t.clientX, t.clientY);
-		r.style.pointerEvents = "", u(), i && i.tagName !== "HTML" && i.tagName !== "BODY" ? e(i) : n();
+	function c(e) {
+		e.preventDefault(), e.stopPropagation(), r.style.pointerEvents = "none";
+		let i = document.elementFromPoint(e.clientX, e.clientY);
+		r.style.pointerEvents = "", u(), i && i.tagName !== "HTML" && i.tagName !== "BODY" ? t(i) : n();
 	}
 	function l(e) {
 		e.key === "Escape" && (u(), n());
@@ -332,21 +331,21 @@ function i(e, n) {
 	}
 	return r.addEventListener("mousemove", s), r.addEventListener("click", c), document.addEventListener("keydown", l), u;
 }
-function a(e) {
-	document.querySelector(`.${t}-toast`)?.remove();
+function i(t) {
+	document.querySelector(`.${e}-toast`)?.remove();
 	let n = document.createElement("div");
-	n.className = `${t}-toast`, n.textContent = e, document.body.appendChild(n), setTimeout(() => n.remove(), 3500);
+	n.className = `${e}-toast`, n.textContent = t, document.body.appendChild(n), setTimeout(() => n.remove(), 3500);
 }
 //#endregion
 //#region src/screenshot.ts
-var o = null;
-function s() {
-	o?.remove(), o = null;
+var a = null;
+function o() {
+	a?.remove(), a = null;
 }
-async function c() {
-	return (await import("./html2canvas-BkIoAdp_.js").then((t) => /* @__PURE__ */ e(t.default, 1))).default;
+async function s() {
+	return (await import("./html2canvas-pro.esm-DwjqUudL.js")).default;
 }
-function l(e) {
+function c(e) {
 	let t = [
 		.85,
 		.7,
@@ -356,8 +355,8 @@ function l(e) {
 	for (let r of t) if (n = e.toDataURL("image/jpeg", r).split(",")[1], n.length <= 35e5) return n;
 	return n;
 }
-async function u(e) {
-	let t = await c(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = document.documentElement.scrollWidth, a = document.documentElement.scrollHeight, o = window.scrollX, s = window.scrollY, u = 16e3, d = Math.max(1, Math.min(2, u / i, u / a)), f = await t(document.body, {
+async function l(e) {
+	let t = await s(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = document.documentElement.scrollWidth, a = document.documentElement.scrollHeight, o = window.scrollX, l = window.scrollY, u = 16e3, d = Math.max(1, Math.min(2, u / i, u / a)), f = await t(document.body, {
 		scale: d,
 		useCORS: !0,
 		logging: !1,
@@ -369,19 +368,19 @@ async function u(e) {
 		y: 0,
 		width: i,
 		height: a
-	}), p = Math.min(o, Math.max(0, i - n)), m = Math.min(s, Math.max(0, a - r)), h = document.createElement("canvas");
+	}), p = Math.min(o, Math.max(0, i - n)), m = Math.min(l, Math.max(0, a - r)), h = document.createElement("canvas");
 	h.width = Math.round(n * d), h.height = Math.round(r * d);
 	let g = h.getContext("2d");
-	if (!g) return l(f);
+	if (!g) return c(f);
 	if (g.fillStyle = "#ffffff", g.fillRect(0, 0, h.width, h.height), g.drawImage(f, Math.round(p * d), Math.round(m * d), h.width, h.height, 0, 0, h.width, h.height), e) {
-		let t = (e.left + o - p - 4) * d, n = (e.top + s - m - 4) * d, r = (e.width + 8) * d, i = (e.height + 8) * d;
+		let t = (e.left + o - p - 4) * d, n = (e.top + l - m - 4) * d, r = (e.width + 8) * d, i = (e.height + 8) * d;
 		g.fillStyle = "rgba(192,57,43,0.07)", g.fillRect(t, n, r, i), g.strokeStyle = "#C0392B", g.lineWidth = Math.max(2, 4 * d), g.strokeRect(t, n, r, i);
 	}
-	return l(h);
+	return c(h);
 }
-async function d(e) {
+async function u(e) {
 	let t = e.getBoundingClientRect();
-	return u({
+	return l({
 		left: t.left,
 		top: t.top,
 		width: t.width,
@@ -390,7 +389,7 @@ async function d(e) {
 }
 //#endregion
 //#region src/widget.ts
-var f = "wexia", p = class {
+var d = "wexia", f = class {
 	constructor(e) {
 		this.screenshotBase64 = null, this.pickCleanup = null, this.initialized = !1, this.config = {
 			position: "bottom-right",
@@ -406,21 +405,21 @@ var f = "wexia", p = class {
 	}
 	init() {
 		if (this.initialized) return this;
-		this.initialized = !0, n(this.config.primaryColor, this.config.position);
-		let e = r(this.config);
+		this.initialized = !0, t(this.config.primaryColor, this.config.position);
+		let e = n(this.config);
 		return e.button.addEventListener("click", () => {
-			e.panel.classList.contains(`${f}-open`) ? e.panel.classList.remove(`${f}-open`) : (this.resetForm(e), e.panel.classList.add(`${f}-open`));
+			e.panel.classList.contains(`${d}-open`) ? e.panel.classList.remove(`${d}-open`) : (this.resetForm(e), e.panel.classList.add(`${d}-open`));
 		}), e.pickRow.addEventListener("click", () => {
-			e.panel.classList.remove(`${f}-open`), this.pickCleanup = i(async (t) => {
-				e.pickRow.classList.add(`${f}-active`), e.pickRow.innerHTML = `<span class="${f}-pick-icon">⏳</span><span>Pořizuji screenshot…</span>`;
+			e.panel.classList.remove(`${d}-open`), this.pickCleanup = r(async (t) => {
+				e.pickRow.classList.add(`${d}-active`), e.pickRow.innerHTML = `<span class="${d}-pick-icon">⏳</span><span>Pořizuji screenshot…</span>`;
 				try {
-					this.screenshotBase64 = await d(t), this.showScreenshotPreview(e), e.pickRow.innerHTML = `<span class="${f}-pick-icon">✅</span><span>Element označen — změnit</span>`;
+					this.screenshotBase64 = await u(t), this.showScreenshotPreview(e), e.pickRow.innerHTML = `<span class="${d}-pick-icon">✅</span><span>Element označen — změnit</span>`;
 				} catch {
-					e.pickRow.innerHTML = `<span class="${f}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.pickRow.classList.remove(`${f}-active`);
+					e.pickRow.innerHTML = `<span class="${d}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.pickRow.classList.remove(`${d}-active`);
 				}
-				e.panel.classList.add(`${f}-open`), this.pickCleanup = null;
+				e.panel.classList.add(`${d}-open`), this.pickCleanup = null;
 			}, () => {
-				e.panel.classList.add(`${f}-open`), this.pickCleanup = null;
+				e.panel.classList.add(`${d}-open`), this.pickCleanup = null;
 			});
 		}), e.submitBtn.addEventListener("click", async () => {
 			let t = e.commentTextarea.value.trim();
@@ -441,7 +440,7 @@ var f = "wexia", p = class {
 				timestamp: (/* @__PURE__ */ new Date()).toISOString()
 			};
 			try {
-				await this.submit(n), this.showSuccess(e), a("✓ Feedback úspěšně odeslán");
+				await this.submit(n), this.showSuccess(e), i("✓ Feedback úspěšně odeslán");
 			} catch (t) {
 				let n = t instanceof Error ? t.message : "Chyba při odesílání.";
 				this.showError(e, n), e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
@@ -472,26 +471,26 @@ var f = "wexia", p = class {
 		Array.from(e.panelBody.children).forEach((e) => {
 			e.style.display = "none";
 		});
-		let t = e.panelBody.querySelector(`.${f}-success-wrap`);
-		t || (t = document.createElement("div"), t.className = `${f}-success-wrap`, e.panelBody.appendChild(t)), t.style.display = "block", t.innerHTML = `
-      <div class="${f}-success">
-        <div class="${f}-success-icon">✓</div>
+		let t = e.panelBody.querySelector(`.${d}-success-wrap`);
+		t || (t = document.createElement("div"), t.className = `${d}-success-wrap`, e.panelBody.appendChild(t)), t.style.display = "block", t.innerHTML = `
+      <div class="${d}-success">
+        <div class="${d}-success-icon">✓</div>
         <div>Děkujeme za feedback!</div>
         <div style="font-size:13px;font-weight:400;color:#555;margin-top:4px">Tým Wexia se na to podívá.</div>
       </div>
-      <button type="button" class="${f}-again-btn">Odeslat další feedback</button>
-    `, t.querySelector(`.${f}-again-btn`)?.addEventListener("click", () => this.resetForm(e));
+      <button type="button" class="${d}-again-btn">Odeslat další feedback</button>
+    `, t.querySelector(`.${d}-again-btn`)?.addEventListener("click", () => this.resetForm(e));
 	}
 	resetForm(e) {
-		let t = e.panelBody.querySelector(`.${f}-success-wrap`);
+		let t = e.panelBody.querySelector(`.${d}-success-wrap`);
 		t && (t.style.display = "none"), Array.from(e.panelBody.children).forEach((e) => {
 			e !== t && (e.style.display = "");
-		}), this.screenshotBase64 = null, s(), e.commentTextarea.value = "", e.screenshotPreview.style.display = "none", e.screenshotPreview.innerHTML = "", e.pickRow.classList.remove(`${f}-active`), e.pickRow.innerHTML = `<span class="${f}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.errorEl.style.display = "none", e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
+		}), this.screenshotBase64 = null, o(), e.commentTextarea.value = "", e.screenshotPreview.style.display = "none", e.screenshotPreview.innerHTML = "", e.pickRow.classList.remove(`${d}-active`), e.pickRow.innerHTML = `<span class="${d}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.errorEl.style.display = "none", e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
 	}
 	destroy() {
-		this.pickCleanup?.(), s(), document.getElementById(`${f}-btn`)?.remove(), document.getElementById(`${f}-panel`)?.remove(), document.getElementById(`${f}-styles`)?.remove(), this.initialized = !1;
+		this.pickCleanup?.(), o(), document.getElementById(`${d}-btn`)?.remove(), document.getElementById(`${d}-panel`)?.remove(), document.getElementById(`${d}-styles`)?.remove(), this.initialized = !1;
 	}
 };
-window.WexiaWidget = p;
+window.WexiaWidget = f;
 //#endregion
-export { p as WexiaWidget, p as default };
+export { f as WexiaWidget, f as default };

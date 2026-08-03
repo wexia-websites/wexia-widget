@@ -1,6 +1,6 @@
 {
   "name": "@wexia/widget",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Wexia feedback widget — vložitelný na jakýkoliv web",
   "private": false,
   "type": "module",
@@ -21,6 +21,6 @@
     "vite": "^8.1.0"
   },
   "dependencies": {
-    "html2canvas": "^1.4.1"
+    "html2canvas-pro": "^2.3.3"
   }
 }
