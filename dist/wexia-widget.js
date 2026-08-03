@@ -356,27 +356,27 @@ function c(e) {
 	return n;
 }
 async function l(e) {
-	let t = await s(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = document.documentElement.scrollWidth, a = document.documentElement.scrollHeight, o = window.scrollX, l = window.scrollY, u = 16e3, d = Math.max(1, Math.min(2, u / i, u / a)), f = await t(document.body, {
-		scale: d,
+	let t = await s(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = window.scrollX, a = window.scrollY, o = 16e3, l = Math.max(1, Math.min(2, o / n, o / r)), u = await t(document.documentElement, {
+		scale: l,
 		useCORS: !0,
 		logging: !1,
+		imageTimeout: 15e3,
+		backgroundColor: "#ffffff",
+		x: i,
+		y: a,
+		width: n,
+		height: r,
 		windowWidth: n,
-		windowHeight: r,
-		scrollX: 0,
-		scrollY: 0,
-		x: 0,
-		y: 0,
-		width: i,
-		height: a
-	}), p = Math.min(o, Math.max(0, i - n)), m = Math.min(l, Math.max(0, a - r)), h = document.createElement("canvas");
-	h.width = Math.round(n * d), h.height = Math.round(r * d);
-	let g = h.getContext("2d");
-	if (!g) return c(f);
-	if (g.fillStyle = "#ffffff", g.fillRect(0, 0, h.width, h.height), g.drawImage(f, Math.round(p * d), Math.round(m * d), h.width, h.height, 0, 0, h.width, h.height), e) {
-		let t = (e.left + o - p - 4) * d, n = (e.top + l - m - 4) * d, r = (e.width + 8) * d, i = (e.height + 8) * d;
-		g.fillStyle = "rgba(192,57,43,0.07)", g.fillRect(t, n, r, i), g.strokeStyle = "#C0392B", g.lineWidth = Math.max(2, 4 * d), g.strokeRect(t, n, r, i);
+		windowHeight: r
+	}), d = document.createElement("canvas");
+	d.width = u.width, d.height = u.height;
+	let f = d.getContext("2d");
+	if (!f) return c(u);
+	if (f.drawImage(u, 0, 0), e) {
+		let t = (e.left - 4) * l, n = (e.top - 4) * l, r = (e.width + 8) * l, i = (e.height + 8) * l;
+		f.fillStyle = "rgba(192,57,43,0.07)", f.fillRect(t, n, r, i), f.strokeStyle = "#C0392B", f.lineWidth = Math.max(2, 4 * l), f.strokeRect(t, n, r, i);
 	}
-	return c(h);
+	return c(d);
 }
 async function u(e) {
 	let t = e.getBoundingClientRect();
@@ -462,7 +462,7 @@ var d = "wexia", f = class {
 		}
 	}
 	showScreenshotPreview(e) {
-		this.screenshotBase64 && (e.screenshotPreview.style.display = "flex", e.screenshotPreview.innerHTML = `<img src="data:image/png;base64,${this.screenshotBase64}" alt="Screenshot" />`);
+		this.screenshotBase64 && (e.screenshotPreview.style.display = "flex", e.screenshotPreview.innerHTML = `<img src="data:image/jpeg;base64,${this.screenshotBase64}" alt="Screenshot" />`);
 	}
 	showError(e, t) {
 		e.errorEl.textContent = t, e.errorEl.style.display = "block";

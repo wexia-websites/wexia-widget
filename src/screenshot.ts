@@ -39,57 +39,46 @@ export async function captureScreenshot(highlight?: HighlightRect): Promise<stri
 
   const vw = document.documentElement.clientWidth
   const vh = document.documentElement.clientHeight
-  const pageW = document.documentElement.scrollWidth
-  const pageH = document.documentElement.scrollHeight
   const sx = window.scrollX
   const sy = window.scrollY
 
-  // html2canvas při přímém viewport-crop (x/y = scroll) ignoruje scroll pozici
-  // a zachytí vršek stránky. Proto vyrenderujeme celou stránku ve správné
-  // velikosti okna (kvůli 100vh, media queries) a viditelný výřez vyřízneme sami.
-  // Adaptivní scale drží canvas pod limitem prohlížeče (~16384 px/hranu).
+  // Renderujeme přímo viditelný výřez: html2canvas dostane `documentElement`
+  // (ne `body`) s cropem na aktuální scroll (x/y = scroll) a rozměry okna.
+  // Tímhle se scroll pozice i position:sticky/fixed prvky vykreslí správně —
+  // dřívější "full page render + ruční crop" je u sticky/fixed rozházel přes
+  // sebe. Adaptivní scale drží hranu canvasu pod limitem prohlížeče (~16384 px).
   const MAX_EDGE = 16000
-  const scale = Math.max(1, Math.min(2, MAX_EDGE / pageW, MAX_EDGE / pageH))
+  const scale = Math.max(1, Math.min(2, MAX_EDGE / vw, MAX_EDGE / vh))
 
-  const full = await html2canvas(document.body, {
+  const rendered = await html2canvas(document.documentElement, {
     scale,
     useCORS: true,
     logging: false,
+    imageTimeout: 15000,
+    backgroundColor: '#ffffff',
+    x: sx,
+    y: sy,
+    width: vw,
+    height: vh,
     windowWidth: vw,
     windowHeight: vh,
-    scrollX: 0,
-    scrollY: 0,
-    x: 0,
-    y: 0,
-    width: pageW,
-    height: pageH,
   })
 
-  const cropX = Math.min(sx, Math.max(0, pageW - vw))
-  const cropY = Math.min(sy, Math.max(0, pageH - vh))
-
+  // Highlight kreslíme na VLASTNÍ canvas (kopie přes drawImage), ne na ten
+  // vrácený z html2canvas — na něm se post-render kreslení zahazuje (interní
+  // stav contextu). rect z getBoundingClientRect je viewport-relativní, takže
+  // pozice v canvasu = rect * scale (bez scroll offsetu).
   const out = document.createElement('canvas')
-  out.width = Math.round(vw * scale)
-  out.height = Math.round(vh * scale)
+  out.width = rendered.width
+  out.height = rendered.height
   const ctx = out.getContext('2d')
-  if (!ctx) return encodeUnderLimit(full)
-  // Bílé pozadí — JPEG nemá alfu, průhledné oblasti by jinak byly černé.
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(0, 0, out.width, out.height)
-  ctx.drawImage(
-    full,
-    Math.round(cropX * scale), Math.round(cropY * scale), out.width, out.height,
-    0, 0, out.width, out.height,
-  )
+  if (!ctx) return encodeUnderLimit(rendered)
+  ctx.drawImage(rendered, 0, 0)
 
-  // Rámeček kolem vybraného elementu domalujeme přímo na výřez. Spoléhat na
-  // html2canvas u position:fixed highlightu je nespolehlivé (umístí ho vůči
-  // vršku full-page renderu, ne vůči reálné pozici prvku). rect je
-  // viewport-relativní → absolutní pozice = rect + scroll, v canvasu = (abs - crop) * scale.
   if (highlight) {
     const pad = 4
-    const fx = (highlight.left + sx - cropX - pad) * scale
-    const fy = (highlight.top + sy - cropY - pad) * scale
+    const fx = (highlight.left - pad) * scale
+    const fy = (highlight.top - pad) * scale
     const fw = (highlight.width + pad * 2) * scale
     const fh = (highlight.height + pad * 2) * scale
     ctx.fillStyle = 'rgba(192,57,43,0.07)'

@@ -123,7 +123,7 @@ class WexiaWidget {
   private showScreenshotPreview(ui: ReturnType<typeof createUI>) {
     if (!this.screenshotBase64) return
     ui.screenshotPreview.style.display = 'flex'
-    ui.screenshotPreview.innerHTML = `<img src="data:image/png;base64,${this.screenshotBase64}" alt="Screenshot" />`
+    ui.screenshotPreview.innerHTML = `<img src="data:image/jpeg;base64,${this.screenshotBase64}" alt="Screenshot" />`
   }
 
   private showError(ui: ReturnType<typeof createUI>, msg: string) {
