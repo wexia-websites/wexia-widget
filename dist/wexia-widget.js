@@ -371,22 +371,13 @@ function l(e) {
 		a.length === 4 && Number(a[3]) < 1 && (e.style.backgroundColor = `rgb(${a[0]}, ${a[1]}, ${a[2]})`);
 	});
 }
-var u = /\.public\.blob\.vercel-storage\.com$/i;
-function d(e) {
-	if (e.tagName === "IFRAME") return !0;
-	if (e.tagName !== "IMG") return !1;
-	let t = e.currentSrc || e.src || "";
-	if (!t) return !1;
-	try {
-		let e = new URL(t, location.href).host;
-		return !(e === location.host || u.test(e));
-	} catch {
-		return !1;
-	}
+function u(e) {
+	return e.tagName === "IFRAME";
 }
+var d = () => !1;
 async function f(e) {
-	let t = await s(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = window.scrollX, a = window.scrollY, o = 16e3, u = Math.max(1, Math.min(2, o / n, o / r)), f = await t(document.documentElement, {
-		scale: u,
+	let t = await s(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = window.scrollX, a = window.scrollY, o = 16e3, f = Math.max(1, Math.min(2, o / n, o / r)), p = await t(document.documentElement, {
+		scale: f,
 		useCORS: !0,
 		logging: !1,
 		imageTimeout: 15e3,
@@ -398,16 +389,17 @@ async function f(e) {
 		windowWidth: n,
 		windowHeight: r,
 		onclone: l,
-		ignoreElements: d
-	}), p = document.createElement("canvas");
-	p.width = f.width, p.height = f.height;
-	let m = p.getContext("2d");
-	if (!m) return c(f);
-	if (m.drawImage(f, 0, 0), e) {
-		let t = (e.left - 4) * u, n = (e.top - 4) * u, r = (e.width + 8) * u, i = (e.height + 8) * u;
-		m.fillStyle = "rgba(192,57,43,0.07)", m.fillRect(t, n, r, i), m.strokeStyle = "#C0392B", m.lineWidth = Math.max(2, 4 * u), m.strokeRect(t, n, r, i);
+		ignoreElements: u,
+		customIsSameOrigin: d
+	}), m = document.createElement("canvas");
+	m.width = p.width, m.height = p.height;
+	let h = m.getContext("2d");
+	if (!h) return c(p);
+	if (h.drawImage(p, 0, 0), e) {
+		let t = (e.left - 4) * f, n = (e.top - 4) * f, r = (e.width + 8) * f, i = (e.height + 8) * f;
+		h.fillStyle = "rgba(192,57,43,0.07)", h.fillRect(t, n, r, i), h.strokeStyle = "#C0392B", h.lineWidth = Math.max(2, 4 * f), h.strokeRect(t, n, r, i);
 	}
-	return c(p);
+	return c(m);
 }
 async function p(e) {
 	let t = e.getBoundingClientRect();

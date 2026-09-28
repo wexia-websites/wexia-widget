@@ -65,36 +65,18 @@ function neutralizeUnsupportedLayout(doc: Document): void {
   })
 }
 
-// Cross-origin prvky bez CORS „otráví" canvas → toDataURL() hodí SecurityError
-// a celý screenshot spadne. Na produkci je typicky přidává Google Tag Manager
-// (Facebook/LinkedIn/DoubleClick pixely a iframy), které dev/preview nemá —
-// proto to lokálně fungovalo a na live ne. Tyhle prvky v screenshotu stejně
-// nemají hodnotu, tak je z capture úplně vynecháme.
-//   - <iframe> vždy (cross-origin iframe = SecurityError, nikdy nechceme)
-//   - všechny cross-origin <img> KROMĚ same-origin a hostů se známým CORS
-// Nedá se synchronně zjistit, jestli konkrétní obrázek posílá CORS hlavičky,
-// proto jedeme allowlist: same-origin je vždy bezpečné a Vercel Blob posílá
-// `access-control-allow-origin: *` (produktové fotky/loga → zůstávají). Cokoli
-// jiného cross-origin (tabidoo bez CORS, tracking pixely, embeddy) může canvas
-// otrávit → radši vynecháme; screenshot dál ukáže layout, text a zvýrazněný
-// prvek.
-const CORS_SAFE_HOSTS = /\.public\.blob\.vercel-storage\.com$/i
-
+// Cross-origin iframe v klonu = SecurityError a v screenshotu nemá hodnotu.
 function shouldIgnoreForCapture(el: Element): boolean {
-  if (el.tagName === 'IFRAME') return true
-  if (el.tagName !== 'IMG') return false
-  const src =
-    (el as HTMLImageElement).currentSrc || (el as HTMLImageElement).src || ''
-  if (!src) return false
-  try {
-    const host = new URL(src, location.href).host
-    if (host === location.host) return false
-    if (CORS_SAFE_HOSTS.test(host)) return false
-    return true
-  } catch {
-    return false
-  }
+  return el.tagName === 'IFRAME'
 }
+
+// Všechny obrázky načítáme s crossOrigin="anonymous" — i ty "same-origin".
+// html2canvas jinak same-origin URL načte bez CORS režimu, a když ta URL
+// přesměruje na jiný origin (např. eshop `/api/hero/…/image/` → 307 na Vercel
+// Blob), obrázek canvas otráví → toDataURL() hodí "Tainted canvases may not be
+// exported". V CORS režimu se obrázek s CORS hlavičkami vykreslí čistě a
+// obrázek bez nich se jen nenačte (chybí v screenshotu), ale canvas neotráví.
+const treatAllAsCrossOrigin = () => false
 
 export async function captureScreenshot(highlight?: HighlightRect): Promise<string> {
   const html2canvas = await loadHtml2Canvas()
@@ -126,6 +108,7 @@ export async function captureScreenshot(highlight?: HighlightRect): Promise<stri
     windowHeight: vh,
     onclone: neutralizeUnsupportedLayout,
     ignoreElements: shouldIgnoreForCapture,
+    customIsSameOrigin: treatAllAsCrossOrigin,
   })
 
   // Highlight kreslíme na VLASTNÍ canvas (kopie přes drawImage), ne na ten
