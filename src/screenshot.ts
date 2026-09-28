@@ -65,6 +65,32 @@ function neutralizeUnsupportedLayout(doc: Document): void {
   })
 }
 
+// Cross-origin prvky bez CORS „otráví" canvas → toDataURL() hodí SecurityError
+// a celý screenshot spadne. Na produkci je typicky přidává Google Tag Manager
+// (Facebook/LinkedIn/DoubleClick pixely a iframy), které dev/preview nemá —
+// proto to lokálně fungovalo a na live ne. Tyhle prvky v screenshotu stejně
+// nemají hodnotu, tak je z capture úplně vynecháme.
+//   - <iframe> vždy (cross-origin iframe = SecurityError, nikdy nechceme)
+//   - tracking pixely/embeddy ze známých třetích stran
+// Produktové obrázky (Vercel Blob) posílají `access-control-allow-origin: *`,
+// takže je NEignorujeme — v screenshotu zůstanou.
+const THIRD_PARTY_HOSTS =
+  /(?:googletagmanager|google-analytics|doubleclick|facebook|fbcdn|linkedin|licdn|youtube|ytimg|\.google\.com)/i
+
+function shouldIgnoreForCapture(el: Element): boolean {
+  if (el.tagName === 'IFRAME') return true
+  const src =
+    (el as HTMLImageElement).currentSrc || (el as HTMLImageElement).src || ''
+  if (!src) return false
+  try {
+    const host = new URL(src, location.href).host
+    if (host === location.host) return false
+    return THIRD_PARTY_HOSTS.test(host)
+  } catch {
+    return false
+  }
+}
+
 export async function captureScreenshot(highlight?: HighlightRect): Promise<string> {
   const html2canvas = await loadHtml2Canvas()
 
@@ -94,6 +120,7 @@ export async function captureScreenshot(highlight?: HighlightRect): Promise<stri
     windowWidth: vw,
     windowHeight: vh,
     onclone: neutralizeUnsupportedLayout,
+    ignoreElements: shouldIgnoreForCapture,
   })
 
   // Highlight kreslíme na VLASTNÍ canvas (kopie přes drawImage), ne na ten

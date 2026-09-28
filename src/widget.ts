@@ -50,9 +50,14 @@ class WexiaWidget {
             this.screenshotBase64 = await captureElementWithHighlight(element)
             this.showScreenshotPreview(ui)
             ui.pickRow.innerHTML = `<span class="${PREFIX}-pick-icon">✅</span><span>Element označen — změnit</span>`
-          } catch {
-            ui.pickRow.innerHTML = `<span class="${PREFIX}-pick-icon">🎯</span><span>Označit element na stránce</span>`
+          } catch (err) {
+            // Nespadnout potichu: screenshot je volitelný, feedback jde poslat
+            // i bez něj. Nejčastější příčina je otrávený canvas (cross-origin
+            // prvek bez CORS). Necháme viditelnou hlášku + zalogujeme.
+            console.warn('[wexia-widget] screenshot se nepodařil pořídit:', err)
+            this.screenshotBase64 = null
             ui.pickRow.classList.remove(`${PREFIX}-active`)
+            ui.pickRow.innerHTML = `<span class="${PREFIX}-pick-icon">⚠️</span><span>Screenshot se nepodařil — feedback pošli i bez něj</span>`
           }
 
           ui.panel.classList.add(`${PREFIX}-open`)

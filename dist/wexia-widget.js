@@ -371,8 +371,20 @@ function l(e) {
 		a.length === 4 && Number(a[3]) < 1 && (e.style.backgroundColor = `rgb(${a[0]}, ${a[1]}, ${a[2]})`);
 	});
 }
-async function u(e) {
-	let t = await s(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = window.scrollX, a = window.scrollY, o = 16e3, u = Math.max(1, Math.min(2, o / n, o / r)), d = await t(document.documentElement, {
+var u = /(?:googletagmanager|google-analytics|doubleclick|facebook|fbcdn|linkedin|licdn|youtube|ytimg|\.google\.com)/i;
+function d(e) {
+	if (e.tagName === "IFRAME") return !0;
+	let t = e.currentSrc || e.src || "";
+	if (!t) return !1;
+	try {
+		let e = new URL(t, location.href).host;
+		return e !== location.host && u.test(e);
+	} catch {
+		return !1;
+	}
+}
+async function f(e) {
+	let t = await s(), n = document.documentElement.clientWidth, r = document.documentElement.clientHeight, i = window.scrollX, a = window.scrollY, o = 16e3, u = Math.max(1, Math.min(2, o / n, o / r)), f = await t(document.documentElement, {
 		scale: u,
 		useCORS: !0,
 		logging: !1,
@@ -384,20 +396,21 @@ async function u(e) {
 		height: r,
 		windowWidth: n,
 		windowHeight: r,
-		onclone: l
-	}), f = document.createElement("canvas");
-	f.width = d.width, f.height = d.height;
-	let p = f.getContext("2d");
-	if (!p) return c(d);
-	if (p.drawImage(d, 0, 0), e) {
+		onclone: l,
+		ignoreElements: d
+	}), p = document.createElement("canvas");
+	p.width = f.width, p.height = f.height;
+	let m = p.getContext("2d");
+	if (!m) return c(f);
+	if (m.drawImage(f, 0, 0), e) {
 		let t = (e.left - 4) * u, n = (e.top - 4) * u, r = (e.width + 8) * u, i = (e.height + 8) * u;
-		p.fillStyle = "rgba(192,57,43,0.07)", p.fillRect(t, n, r, i), p.strokeStyle = "#C0392B", p.lineWidth = Math.max(2, 4 * u), p.strokeRect(t, n, r, i);
+		m.fillStyle = "rgba(192,57,43,0.07)", m.fillRect(t, n, r, i), m.strokeStyle = "#C0392B", m.lineWidth = Math.max(2, 4 * u), m.strokeRect(t, n, r, i);
 	}
-	return c(f);
+	return c(p);
 }
-async function d(e) {
+async function p(e) {
 	let t = e.getBoundingClientRect();
-	return u({
+	return f({
 		left: t.left,
 		top: t.top,
 		width: t.width,
@@ -406,7 +419,7 @@ async function d(e) {
 }
 //#endregion
 //#region src/widget.ts
-var f = "wexia", p = class {
+var m = "wexia", h = class {
 	constructor(e) {
 		this.screenshotBase64 = null, this.pickCleanup = null, this.initialized = !1, this.config = {
 			position: "bottom-right",
@@ -425,18 +438,18 @@ var f = "wexia", p = class {
 		this.initialized = !0, t(this.config.primaryColor, this.config.position);
 		let e = n(this.config);
 		return e.button.addEventListener("click", () => {
-			e.panel.classList.contains(`${f}-open`) ? e.panel.classList.remove(`${f}-open`) : (this.resetForm(e), e.panel.classList.add(`${f}-open`));
+			e.panel.classList.contains(`${m}-open`) ? e.panel.classList.remove(`${m}-open`) : (this.resetForm(e), e.panel.classList.add(`${m}-open`));
 		}), e.pickRow.addEventListener("click", () => {
-			e.panel.classList.remove(`${f}-open`), this.pickCleanup = r(async (t) => {
-				e.pickRow.classList.add(`${f}-active`), e.pickRow.innerHTML = `<span class="${f}-pick-icon">⏳</span><span>Pořizuji screenshot…</span>`;
+			e.panel.classList.remove(`${m}-open`), this.pickCleanup = r(async (t) => {
+				e.pickRow.classList.add(`${m}-active`), e.pickRow.innerHTML = `<span class="${m}-pick-icon">⏳</span><span>Pořizuji screenshot…</span>`;
 				try {
-					this.screenshotBase64 = await d(t), this.showScreenshotPreview(e), e.pickRow.innerHTML = `<span class="${f}-pick-icon">✅</span><span>Element označen — změnit</span>`;
-				} catch {
-					e.pickRow.innerHTML = `<span class="${f}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.pickRow.classList.remove(`${f}-active`);
+					this.screenshotBase64 = await p(t), this.showScreenshotPreview(e), e.pickRow.innerHTML = `<span class="${m}-pick-icon">✅</span><span>Element označen — změnit</span>`;
+				} catch (t) {
+					console.warn("[wexia-widget] screenshot se nepodařil pořídit:", t), this.screenshotBase64 = null, e.pickRow.classList.remove(`${m}-active`), e.pickRow.innerHTML = `<span class="${m}-pick-icon">⚠️</span><span>Screenshot se nepodařil — feedback pošli i bez něj</span>`;
 				}
-				e.panel.classList.add(`${f}-open`), this.pickCleanup = null;
+				e.panel.classList.add(`${m}-open`), this.pickCleanup = null;
 			}, () => {
-				e.panel.classList.add(`${f}-open`), this.pickCleanup = null;
+				e.panel.classList.add(`${m}-open`), this.pickCleanup = null;
 			});
 		}), e.submitBtn.addEventListener("click", async () => {
 			let t = e.commentTextarea.value.trim();
@@ -488,26 +501,26 @@ var f = "wexia", p = class {
 		Array.from(e.panelBody.children).forEach((e) => {
 			e.style.display = "none";
 		});
-		let t = e.panelBody.querySelector(`.${f}-success-wrap`);
-		t || (t = document.createElement("div"), t.className = `${f}-success-wrap`, e.panelBody.appendChild(t)), t.style.display = "block", t.innerHTML = `
-      <div class="${f}-success">
-        <div class="${f}-success-icon">✓</div>
+		let t = e.panelBody.querySelector(`.${m}-success-wrap`);
+		t || (t = document.createElement("div"), t.className = `${m}-success-wrap`, e.panelBody.appendChild(t)), t.style.display = "block", t.innerHTML = `
+      <div class="${m}-success">
+        <div class="${m}-success-icon">✓</div>
         <div>Děkujeme za feedback!</div>
         <div style="font-size:13px;font-weight:400;color:#555;margin-top:4px">Tým Wexia se na to podívá.</div>
       </div>
-      <button type="button" class="${f}-again-btn">Odeslat další feedback</button>
-    `, t.querySelector(`.${f}-again-btn`)?.addEventListener("click", () => this.resetForm(e));
+      <button type="button" class="${m}-again-btn">Odeslat další feedback</button>
+    `, t.querySelector(`.${m}-again-btn`)?.addEventListener("click", () => this.resetForm(e));
 	}
 	resetForm(e) {
-		let t = e.panelBody.querySelector(`.${f}-success-wrap`);
+		let t = e.panelBody.querySelector(`.${m}-success-wrap`);
 		t && (t.style.display = "none"), Array.from(e.panelBody.children).forEach((e) => {
 			e !== t && (e.style.display = "");
-		}), this.screenshotBase64 = null, o(), e.commentTextarea.value = "", e.screenshotPreview.style.display = "none", e.screenshotPreview.innerHTML = "", e.pickRow.classList.remove(`${f}-active`), e.pickRow.innerHTML = `<span class="${f}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.errorEl.style.display = "none", e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
+		}), this.screenshotBase64 = null, o(), e.commentTextarea.value = "", e.screenshotPreview.style.display = "none", e.screenshotPreview.innerHTML = "", e.pickRow.classList.remove(`${m}-active`), e.pickRow.innerHTML = `<span class="${m}-pick-icon">🎯</span><span>Označit element na stránce</span>`, e.errorEl.style.display = "none", e.submitBtn.disabled = !1, e.submitBtn.textContent = "Odeslat feedback";
 	}
 	destroy() {
-		this.pickCleanup?.(), o(), document.getElementById(`${f}-btn`)?.remove(), document.getElementById(`${f}-panel`)?.remove(), document.getElementById(`${f}-styles`)?.remove(), this.initialized = !1;
+		this.pickCleanup?.(), o(), document.getElementById(`${m}-btn`)?.remove(), document.getElementById(`${m}-panel`)?.remove(), document.getElementById(`${m}-styles`)?.remove(), this.initialized = !1;
 	}
 };
-window.WexiaWidget = p;
+window.WexiaWidget = h;
 //#endregion
-export { p as WexiaWidget, p as default };
+export { h as WexiaWidget, h as default };
