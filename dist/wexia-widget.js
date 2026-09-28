@@ -371,14 +371,15 @@ function l(e) {
 		a.length === 4 && Number(a[3]) < 1 && (e.style.backgroundColor = `rgb(${a[0]}, ${a[1]}, ${a[2]})`);
 	});
 }
-var u = /(?:googletagmanager|google-analytics|doubleclick|facebook|fbcdn|linkedin|licdn|youtube|ytimg|\.google\.com)/i;
+var u = /\.public\.blob\.vercel-storage\.com$/i;
 function d(e) {
 	if (e.tagName === "IFRAME") return !0;
+	if (e.tagName !== "IMG") return !1;
 	let t = e.currentSrc || e.src || "";
 	if (!t) return !1;
 	try {
 		let e = new URL(t, location.href).host;
-		return e !== location.host && u.test(e);
+		return !(e === location.host || u.test(e));
 	} catch {
 		return !1;
 	}

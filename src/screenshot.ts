@@ -71,21 +71,26 @@ function neutralizeUnsupportedLayout(doc: Document): void {
 // proto to lokálně fungovalo a na live ne. Tyhle prvky v screenshotu stejně
 // nemají hodnotu, tak je z capture úplně vynecháme.
 //   - <iframe> vždy (cross-origin iframe = SecurityError, nikdy nechceme)
-//   - tracking pixely/embeddy ze známých třetích stran
-// Produktové obrázky (Vercel Blob) posílají `access-control-allow-origin: *`,
-// takže je NEignorujeme — v screenshotu zůstanou.
-const THIRD_PARTY_HOSTS =
-  /(?:googletagmanager|google-analytics|doubleclick|facebook|fbcdn|linkedin|licdn|youtube|ytimg|\.google\.com)/i
+//   - všechny cross-origin <img> KROMĚ same-origin a hostů se známým CORS
+// Nedá se synchronně zjistit, jestli konkrétní obrázek posílá CORS hlavičky,
+// proto jedeme allowlist: same-origin je vždy bezpečné a Vercel Blob posílá
+// `access-control-allow-origin: *` (produktové fotky/loga → zůstávají). Cokoli
+// jiného cross-origin (tabidoo bez CORS, tracking pixely, embeddy) může canvas
+// otrávit → radši vynecháme; screenshot dál ukáže layout, text a zvýrazněný
+// prvek.
+const CORS_SAFE_HOSTS = /\.public\.blob\.vercel-storage\.com$/i
 
 function shouldIgnoreForCapture(el: Element): boolean {
   if (el.tagName === 'IFRAME') return true
+  if (el.tagName !== 'IMG') return false
   const src =
     (el as HTMLImageElement).currentSrc || (el as HTMLImageElement).src || ''
   if (!src) return false
   try {
     const host = new URL(src, location.href).host
     if (host === location.host) return false
-    return THIRD_PARTY_HOSTS.test(host)
+    if (CORS_SAFE_HOSTS.test(host)) return false
+    return true
   } catch {
     return false
   }
